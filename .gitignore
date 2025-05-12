@@ -1,0 +1,14 @@
+# .gitignore - standard for Terraform, Jenkins, and CI/CD security PoC
+*.tfstate
+*.tfstate.backup
+.terraform/
+.trivy/
+Trivy/report.txt
+*.log
+*.zip
+.DS_Store
+*.swp
+.env
+.idea/
+.vscode/
+*.bak
