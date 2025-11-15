@@ -1,0 +1,49 @@
+# Risk Mitigation – Jenkins CI/CD Security PoC with Trivy
+
+## 1. Purpose
+
+This document identifies key risks associated with the Jenkins + Trivy CI/CD Security Proof of Concept and outlines mitigation strategies. The goal is to demonstrate how security, reliability, and operational risks are considered and managed in a DevSecOps pipeline.
+
+> Note: This PoC is not production-ready. Risks are documented from a demonstration and learning perspective.
+
+---
+
+## 2. Risk Register
+
+| Risk ID | Area                    | Description                                                                                   | Impact          | Likelihood | Mitigation Strategy                                                                                          | Residual Risk |
+|--------:|-------------------------|-----------------------------------------------------------------------------------------------|-----------------|-----------:|--------------------------------------------------------------------------------------------------------------|--------------|
+| R-01    | Tool Coverage           | Trivy focuses on known CVEs and misconfigurations; it does not cover all possible attack vectors. | Medium–High     | Medium     | Clearly scope Trivy as one control among many; document gaps and recommend SAST/DAST and manual review for prod. | Medium       |
+| R-02    | False Sense of Security | Stakeholders may assume that passing Trivy scans = fully secure application.                 | High            | Medium     | Emphasize in README, project_summary, and this file that this is a PoC and only a subset of controls.        | Medium       |
+| R-03    | Pipeline Performance    | Frequent or full-depth scans on every pipeline run may slow builds and reduce team adoption. | Medium          | Medium     | Allow configuration of scan depth and frequency (e.g., full scan on main branch, lighter scans on feature branches). | Low–Medium   |
+| R-04    | Secrets Handling        | Misconfiguration could lead to credentials being stored in Jenkins, environment variables, or logs. | High        | Medium     | Use Docker environment variables minimally, avoid hardcoding secrets, and recommend integration with a secrets manager (e.g., Vault/SM). | Medium       |
+| R-05    | Image Trust             | Base images used by Jenkins or build agents may contain vulnerabilities or outdated packages. | High            | Medium     | Pin base images to trusted sources, scan base images regularly with Trivy, and update them on a defined cadence. | Medium       |
+| R-06    | Report Exposure         | Trivy reports may contain sensitive dependency or version details that could aid attackers if exposed. | Medium      | Low–Medium | Store reports in restricted locations, avoid public exposure of internal dependency details, and clean old reports. | Low–Medium   |
+| R-07    | Local Environment Risk  | Running Jenkins and Trivy locally (e.g., on a personal workstation) may introduce risks if host is not hardened. | Medium    | Medium     | Recommend basic host hardening, OS patching, and least-privilege Docker usage; position PoC for lab/demo use only. | Medium       |
+| R-08    | Human Factors           | Developers may ignore scan results or treat them as “noise,” reducing the effectiveness of the control. | High      | Medium     | Encourage simple, actionable reporting (e.g., fail on Critical/High only), and recommend policy backing for vulnerability SLAs. | Medium       |
+
+---
+
+## 3. Risk Mitigation Summary
+
+This PoC reduces risk by:
+
+- **Shifting security left** with automated vulnerability scanning in CI/CD.
+- Ensuring vulnerabilities are identified **before** deployment artifacts are promoted.
+- Providing a repeatable, containerized environment for security testing.
+
+However, this PoC alone is **not sufficient** for production use. It should be complemented with:
+
+- Additional security tools (SAST, DAST, IaC scanning, policy-as-code).
+- Robust identity and access management for Jenkins, Docker, and build artifacts.
+- Centralized logging, monitoring, and alerting for both pipeline and application behavior.
+- Formal vulnerability management processes (prioritization, remediation SLAs, and dashboards).
+
+---
+
+## 4. Recommended Next Steps
+
+1. Integrate additional scanners (SAST/DAST/IaC) for broader coverage.  
+2. Connect Jenkins to a centralized logging and SIEM platform for monitoring pipeline events.  
+3. Introduce policy-as-code (e.g., OPA, Conftest) to enforce security guardrails.  
+4. Define SLAs for vulnerability remediation (e.g., Critical fixed in 7 days, High in 30 days).  
+5. Harden the Jenkins environment and Docker host for production scenarios (if adopted beyond PoC).
