@@ -1,59 +1,58 @@
-Jenkins CI/CD Security PoC with Trivy
 
-This Proof of Concept demonstrates how to embed security scanning directly into a Jenkins-based CI/CD pipeline using Trivy. The project highlights how containerized CI/CD workflows can proactively detect vulnerabilities in application code, dependencies, and build artifacts, supporting secure DevSecOps practices.
+---
 
-🧩 Technologies Used
+## 🔄 CI/CD Pipeline Overview
 
-Jenkins – Automates build, test, and pipeline execution
-Trivy – Performs vulnerability scanning across files, containers, and artifacts
-Docker – Runs Jenkins in a containerized environment for consistency and portability
+The Jenkins pipeline consists of the following stages:
 
-See technologies.md for full descriptions of each technology (What it is, How it works, Why we used it).
+1. **Terraform Init** – Initializes the Terraform working directory  
+2. **Terraform Validate** – Validates configuration syntax  
+3. **tfsec Scan** – Runs IaC static analysis for Terraform security issues  
+4. **Trivy Scan** – Performs a filesystem scan of the Jenkins workspace  
+   - Outputs results **directly to Jenkins console logs**  
+   - No report files are generated or stored (simplifies PoC setup)  
+5. **Terraform Plan & Apply** – Creates and applies infrastructure changes  
 
-🛠️ Project Structure
-├── docker-compose.yml
-├── Dockerfile                 # Jenkins container with Trivy installed
-├── Jenkinsfile                # CI/CD pipeline definition
-├── Trivy/
-│   └── report.txt             # Vulnerability scan outputs
-├── project_summary.md         # Problem, goals, results, recommendations
-├── compliance_mapping.md      # Standards alignment (NIST/ISO/OWASP)
-└── technologies.md            # What/Why/How of each component used
+This workflow demonstrates how to layer security checks into infrastructure automation with minimal overhead.
 
-🔄 CI/CD Pipeline Overview
+---
 
-Jenkins runs inside a Docker container using the provided docker-compose.yml
+## 📊 Architecture Diagram
 
-The pipeline is triggered manually or via a commit (optional Git integration)
+Architecture and dataflow diagrams are provided in the `diagrams/` directory:
 
-Jenkins executes build stages as defined in the Jenkinsfile
+- `architecture_diagram.mmd`
+- `dataflow_diagram.mmd`
 
-Trivy scans the Jenkins workspace
-→ Output is saved to Trivy/report.txt
+You may export them as PNG if needed for documentation or LinkedIn.
 
-(Optional) Jenkins can:
-Archive scan results
-Fail the build on High or Critical vulnerabilities
-Integrate results into dashboards or alerting workflows
+---
 
-📄 Documentation Overview
+## 📄 Documentation Overview
 
-project_summary.md – Business problem, PoC goals, methodology, and results
-compliance_mapping.md – NIST/ISO/OWASP control alignment
-technologies.md – What each tool is, how it works, and why it is used
+- **project_summary.md** – Problem, goals, methodology, results  
+- **compliance_mapping.md** – NIST, NIST 171, PCI-DSS mapping  
+- **risk_mitigation.md** – Risks + mitigations for CI/CD security  
+- **cost_optimization.md** – Cost considerations for running Jenkins + scanning  
+- **technologies.md** – What each tool is, how it works, and why it’s used  
 
-📌 Why This Matters
-Integrating vulnerability scanning into CI/CD workflows ensures that security controls are applied consistently and early in the development lifecycle.
-This PoC demonstrates how DevSecOps practices:
+---
 
-Reduce security risk
-Enable early detection of vulnerabilities
-Improve audit readiness and compliance
-Strengthen software delivery quality
+## 📌 Why This Matters
 
-The project provides a realistic, hands-on example of shifting security left in a modern cloud-aligned CI/CD pipeline.
+Embedding security scanning directly into CI/CD pipelines:
 
-🚫 Disclaimer
+- Identifies vulnerabilities **early** (shift-left approach)  
+- Reduces operational and compliance risk  
+- Improves cloud security posture  
+- Provides repeatable validation of Terraform and application artifacts  
+- Demonstrates DevSecOps workflows used in modern cloud teams  
 
-This project is for demonstration and educational purposes only.
-It is not intended to represent a production-ready security pipeline.
+This PoC shows how Terraform, tfsec, Trivy, and Jenkins can work together to build a measurable, automated, security-aware delivery pipeline.
+
+---
+
+## 🚫 Disclaimer
+
+This project is for demonstration and portfolio purposes only.  
+It is **not** intended to represent a production-ready CI/CD pipeline.
