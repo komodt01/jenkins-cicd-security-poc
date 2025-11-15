@@ -1,0 +1,16 @@
+flowchart LR
+    dev[Developer] -->|Commit / Manual Trigger| jenkins[Jenkins (Docker Container)]
+
+    subgraph docker_host[Docker Host]
+        jenkins --> workspace[Jenkins Workspace]
+        jenkins --> trivy[Trivy Scanner]
+    end
+
+    workspace --> artifacts[Build Artifacts / Source Code]
+    trivy --> reports[Trivy Report (Trivy/report.txt)]
+
+    reports -->|Optional: Archive / Notifications| ci_decisions[Pipeline Decision]
+    ci_decisions -->|Pass| status_ok[Build Succeeds]
+    ci_decisions -->|Fail on High/Critical| status_fail[Build Fails]
+
+    style docker_host fill:none,stroke-dasharray:3 3
