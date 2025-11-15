@@ -1,0 +1,92 @@
+# Cost Optimization – Jenkins CI/CD Security PoC with Trivy
+
+## 1. Purpose
+
+This document describes cost considerations and optimization strategies for running the Jenkins + Trivy CI/CD Security PoC. While the environment is lightweight and lab-focused, the same principles apply when scaling to team or enterprise use.
+
+---
+
+## 2. Cost Drivers
+
+Even in a PoC, the following areas contribute to cost:
+
+1. **Compute Resources**
+   - CPU and memory for the Docker host running Jenkins and Trivy.
+   - Any underlying VM or server if running in the cloud.
+
+2. **Storage**
+   - Disk space for Jenkins workspaces, Trivy vulnerability reports, logs, and Docker images.
+
+3. **Scan Frequency**
+   - How often pipelines run and how much work each scan performs (full image scan vs targeted scan).
+
+4. **Tooling**
+   - Trivy itself is open-source and free to use, which helps keep licensing costs at zero for this PoC.
+
+---
+
+## 3. Assumptions
+
+- Jenkins is running in a **single Docker container** on a small host (local machine or a small VM).
+- Trivy scans are scoped to the **current workspace** and/or container images used by the pipeline.
+- This PoC is intended for **learning and portfolio demonstration**, not for large-scale enterprise CI/CD.
+
+---
+
+## 4. Cost Optimization Strategies
+
+### 4.1 Right-Size the Jenkins Host
+
+- Use minimal resources required for Jenkins and Trivy to operate comfortably.
+- For cloud environments, select small instance types and scale up only if pipeline performance becomes a bottleneck.
+- Avoid overprovisioning persistent storage for workspaces and reports.
+
+### 4.2 Optimize Scan Frequency and Depth
+
+- Run **full scans** on:
+  - Main or release branches.
+  - Pre-production or “ready-to-deploy” artifacts.
+- Run **lighter or targeted scans** on:
+  - Feature branches.
+  - Early development iterations.
+- This balances security coverage with performance and resource consumption.
+
+### 4.3 Manage Report Retention
+
+- Store only a **limited history** of Trivy reports (e.g., last 10–20 runs).
+- Periodically clean up old reports and workspaces to reduce disk usage.
+- Use simple retention logic in Jenkins (e.g., build history limits) if desired.
+
+### 4.4 Reuse and Cache Dependencies
+
+- Cache commonly used Docker layers and dependencies when possible.
+- This reduces network usage, build times, and compute cycles for repeated scans of the same base images.
+
+### 4.5 Prefer Open-Source and Built-In Capabilities
+
+- Continue to use **Trivy** as a no-cost scanner for this PoC.
+- Leverage built-in Jenkins capabilities (e.g., basic reporting, archiving) instead of adding commercial plugins where not necessary for demonstration.
+
+---
+
+## 5. Cost vs. Security Tradeoffs
+
+Every cost optimization must be balanced against risk:
+
+- **Too few scans** may reduce visibility into vulnerabilities.
+- **Aggressive report cleanup** may limit historical analysis and auditability.
+
+For this PoC:
+
+- Prioritize **clarity and repeatability** over heavy optimization.
+- Show that security controls are implemented **intentionally** with awareness of cost and performance impacts.
+
+---
+
+## 6. Summary
+
+This PoC demonstrates that:
+
+- Basic CI/CD security controls (Jenkins + Trivy) can be deployed with **minimal cost**.
+- Containerization (Docker) and open-source tools further reduce licensing and infrastructure requirements.
+- The same patterns can scale to more complex environments where cost and security tradeoffs must be explicitly managed.
