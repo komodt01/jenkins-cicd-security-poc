@@ -1,57 +1,59 @@
-# Jenkins CI/CD Security PoC with Trivy
+Jenkins CI/CD Security PoC with Trivy
 
-This project demonstrates how to integrate security scanning into a Jenkins pipeline using [Trivy](https://github.com/aquasecurity/trivy). The PoC showcases how container-based CI/CD workflows can proactively detect vulnerabilities in application code and infrastructure artifacts.
+This Proof of Concept demonstrates how to embed security scanning directly into a Jenkins-based CI/CD pipeline using Trivy. The project highlights how containerized CI/CD workflows can proactively detect vulnerabilities in application code, dependencies, and build artifacts, supporting secure DevSecOps practices.
 
----
+🧩 Technologies Used
 
-## 🧩 Technologies Used
-- **Jenkins** – Automates the build and test workflow
-- **Trivy** – Performs file system and image vulnerability scans
-- **Docker** – Containerizes Jenkins and builds reproducible environments
+Jenkins – Automates build, test, and pipeline execution
+Trivy – Performs vulnerability scanning across files, containers, and artifacts
+Docker – Runs Jenkins in a containerized environment for consistency and portability
 
-See [`technologies.md`](./technologies.md) for full descriptions.
+See technologies.md for full descriptions of each technology (What it is, How it works, Why we used it).
 
----
-
-## 🛠️ Project Structure
-
-```
+🛠️ Project Structure
 ├── docker-compose.yml
-├── Dockerfile (installs Jenkins + Trivy)
-├── Jenkinsfile (defines pipeline stages)
-├── Trivy/ (scan reports)
-├── project_summary.md
-├── compliance_mapping.md
-└── technologies.md
-```
+├── Dockerfile                 # Jenkins container with Trivy installed
+├── Jenkinsfile                # CI/CD pipeline definition
+├── Trivy/
+│   └── report.txt             # Vulnerability scan outputs
+├── project_summary.md         # Problem, goals, results, recommendations
+├── compliance_mapping.md      # Standards alignment (NIST/ISO/OWASP)
+└── technologies.md            # What/Why/How of each component used
 
----
+🔄 CI/CD Pipeline Overview
 
-## 🔄 CI/CD Pipeline Overview
+Jenkins runs inside a Docker container using the provided docker-compose.yml
 
-1. Jenkins builds and runs inside Docker
-2. A pipeline is triggered manually or via commit
-3. Trivy scans the workspace and outputs results to `Trivy/report.txt`
-4. (Optional) Jenkins can archive scan reports or fail on high/critical issues
+The pipeline is triggered manually or via a commit (optional Git integration)
 
----
+Jenkins executes build stages as defined in the Jenkinsfile
 
-## 📄 Documentation
+Trivy scans the Jenkins workspace
+→ Output is saved to Trivy/report.txt
 
-- [`project_summary.md`](./project_summary.md) – Problem, goals, results
-- [`compliance_mapping.md`](./compliance_mapping.md) – Standards alignment
-- [`technologies.md`](./technologies.md) – What/why/how of tools used
+(Optional) Jenkins can:
+Archive scan results
+Fail the build on High or Critical vulnerabilities
+Integrate results into dashboards or alerting workflows
 
----
+📄 Documentation Overview
 
-## 📌 Why This Matters
+project_summary.md – Business problem, PoC goals, methodology, and results
+compliance_mapping.md – NIST/ISO/OWASP control alignment
+technologies.md – What each tool is, how it works, and why it is used
 
-Security scanning as part of CI/CD ensures vulnerabilities are caught early—shifting security left and improving software quality and compliance.
+📌 Why This Matters
+Integrating vulnerability scanning into CI/CD workflows ensures that security controls are applied consistently and early in the development lifecycle.
+This PoC demonstrates how DevSecOps practices:
 
-> This PoC proves the feasibility and value of integrating vulnerability scanning into DevSecOps workflows.
+Reduce security risk
+Enable early detection of vulnerabilities
+Improve audit readiness and compliance
+Strengthen software delivery quality
 
----
+The project provides a realistic, hands-on example of shifting security left in a modern cloud-aligned CI/CD pipeline.
 
-## 🚫 Disclaimer
+🚫 Disclaimer
 
-This project is for demonstration purposes only and does not represent a production-ready security pipeline.
+This project is for demonstration and educational purposes only.
+It is not intended to represent a production-ready security pipeline.
