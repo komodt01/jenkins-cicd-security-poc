@@ -1,0 +1,15 @@
+sequenceDiagram
+    participant Dev as Developer
+    participant Jen as Jenkins Pipeline
+    participant WS as Jenkins Workspace
+    participant Tri as Trivy
+    participant Rep as Trivy Report
+
+    Dev->>Jen: Trigger pipeline (commit or manual)
+    Jen->>WS: Checkout source code / artifacts
+    Jen->>Tri: Invoke Trivy scan (FS or image)
+    Tri->>WS: Read files / image metadata
+    Tri-->>Rep: Generate vulnerability report
+    Jen->>Rep: Collect report (Trivy/report.txt)
+    Jen->>Jen: Evaluate results (e.g., fail on High/Critical)
+    Jen-->>Dev: Pipeline status + scan summary
